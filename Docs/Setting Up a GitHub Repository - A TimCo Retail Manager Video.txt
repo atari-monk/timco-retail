@@ -4,3 +4,6 @@ CommitLog:
 Add VS Solution File
 Adds the blank solution for the TimCo 
 Retail Manager application. 
+CommitLog:
+Update Readme File
+Added proper spacing to the header.
