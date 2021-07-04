@@ -1,0 +1,6 @@
+Solution name: TimCoRetailManager
+Repo desc: A retail management system build by TimCo Enterprise Solutions
+CommitLog: 
+Add VS Solution File
+Adds the blank solution for the TimCo 
+Retail Manager application. 
