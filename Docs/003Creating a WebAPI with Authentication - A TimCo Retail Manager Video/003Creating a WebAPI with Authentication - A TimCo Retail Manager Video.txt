@@ -1,0 +1,33 @@
+1. Register account
+
+type : POST
+call: https://localhost:44356/api/account/register
+body: raw
+format: JSON
+data:
+{
+  "Email": "kmazanek@gmail.com",
+  "Password": "Pwd12345.",
+  "ConfirmPassword": "Pwd12345."
+}
+
+2. Get accounts token 
+
+type : GET
+call: https://localhost:44356/token
+body: x-www-form-urlencoded
+data:
+key: grant_type
+value: password
+key: username
+value: kmazanek@gmail.com
+key: password
+value: Pwd12345
+
+3. Get values
+
+type : GET
+call: https://localhost:44356/api/values
+headers:
+key: Authorization
+value: Bearer paste token from 2.
