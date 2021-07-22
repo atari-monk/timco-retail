@@ -1,0 +1,6 @@
+Added some browser ui for api.
+Called Swachbuckle/Swagger.
+Added Auth method to get token.
+Addded token as param before every other api call
+so it can be authorized with token.
+Done in Swager config file/classes.
