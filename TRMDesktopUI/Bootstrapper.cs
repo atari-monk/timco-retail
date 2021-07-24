@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using TRMDesktopUI.ViewModels;
 
 namespace TRMDesktopUI
@@ -14,6 +15,11 @@ namespace TRMDesktopUI
 		public Bootstrapper()
 		{
 			Initialize();
+
+			ConventionManager.AddElementConvention<PasswordBox>(
+				PasswordBoxHelper.BoundPasswordProperty,
+				"Password",
+				"PasswordChanged");
 		}
 
 		protected override void Configure()
