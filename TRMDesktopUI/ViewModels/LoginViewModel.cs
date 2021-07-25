@@ -1,4 +1,7 @@
 ﻿using Caliburn.Micro;
+using System;
+using System.Threading.Tasks;
+using TRMDesktopUI.Helpers;
 
 namespace TRMDesktopUI.ViewModels
 {
@@ -6,6 +9,12 @@ namespace TRMDesktopUI.ViewModels
 	{
 		private string userName;
 		private string password;
+		private IAPIHelper apiHelper;
+
+		public LoginViewModel(IAPIHelper apiHelper)
+		{
+			this.apiHelper = apiHelper;
+		}
 
 		public string UserName
 		{
@@ -51,9 +60,16 @@ namespace TRMDesktopUI.ViewModels
 			}
 		}
 
-		public void LogIn()
+		public async Task LogIn()
 		{
-
+			try
+			{
+				var result = await apiHelper.Authenticate(UserName, Password);
+			}
+			catch (Exception ex)
+			{ 
+				throw;
+			}
 		}
 	}
 }
