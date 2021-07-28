@@ -19,12 +19,22 @@ namespace TRMDesktopUI.Library.Api
 			InitializeClient();
 		}
 
+		public HttpClient ApiClient 
+		{ 
+			get
+			{
+				return apiClient;
+			}
+		}
+
 		private void InitializeClient()
 		{
 			string api = ConfigurationManager.AppSettings["api"];
 
-			apiClient = new HttpClient();
-			apiClient.BaseAddress = new Uri(api);
+			apiClient = new HttpClient
+			{
+				BaseAddress = new Uri(api)
+			};
 			apiClient.DefaultRequestHeaders.Accept.Clear();
 			apiClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 		}

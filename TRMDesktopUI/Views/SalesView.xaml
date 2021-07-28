@@ -44,7 +44,13 @@
             Grid.Row="2"
             Grid.Column="0"
             MinHeight="200"
-            MinWidth="150"/>
+            MinWidth="150">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding ProductName}"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
         <StackPanel
             Orientation="Vertical"
             Grid.Column="1"
