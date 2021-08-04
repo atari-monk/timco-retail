@@ -34,6 +34,7 @@ namespace TRMDesktopUI.ViewModels
 			{ 
 				selectedProduct = value;
 				NotifyOfPropertyChange(() => SelectedProduct);
+				NotifyOfPropertyChange(() => CanAddToCart);
 			}
 		}
 
@@ -86,17 +87,6 @@ namespace TRMDesktopUI.ViewModels
 			taxAmount = Cart
 				.Where(x => x.Product.IsTaxable)
 				.Sum(x => x.Product.RetailPrice * x.QuantityInCart * taxRate);
-
-			//foreach (CartItemModel item in Cart)
-			//{
-			//	if(item.Product.IsTaxable)
-			//	{
-			//		taxAmount +=
-			//		item.Product.RetailPrice
-			//		* item.QuantityInCart
-			//		* taxRate;
-			//	}
-			//}
 
 			return taxAmount;
 		}
