@@ -8,8 +8,8 @@ namespace TRMDesktopUI.ViewModels
 {
 	public class LoginViewModel : Screen
 	{
-		private string userName;
-		private string password;
+		private string userName = "kmazanek@gmail.com";
+		private string password = "Pwd12345.";
 		private string errorMessage;
 		private readonly IAPIHelper apiHelper;
 		private readonly IEventAggregator events;

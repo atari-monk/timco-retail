@@ -11,6 +11,7 @@ namespace TRMDesktopUI.ViewModels
 	public class SalesViewModel : Screen
 	{
 		private readonly IProductEndpoint productEndpoint;
+		private readonly ISaleEndpoint saleEndpoint;
 		private readonly IConfigHelper configHelper;
 		private BindingList<ProductModel> products;
 		private ProductModel selectedProduct;
@@ -125,9 +126,11 @@ namespace TRMDesktopUI.ViewModels
 
 		public SalesViewModel(
 			IProductEndpoint productEndpoint
+			, ISaleEndpoint saleEndpoint
 			, IConfigHelper configHelper)
 		{
 			this.productEndpoint = productEndpoint;
+			this.saleEndpoint = saleEndpoint;
 			this.configHelper = configHelper;
 		}
 
@@ -168,6 +171,7 @@ namespace TRMDesktopUI.ViewModels
 			NotifyOfPropertyChange(() => SubTotal);
 			NotifyOfPropertyChange(() => Tax);
 			NotifyOfPropertyChange(() => Total);
+			NotifyOfPropertyChange(() => CanCheckOut);
 		}
 
 		public bool CanRemoveFromCart
@@ -185,6 +189,7 @@ namespace TRMDesktopUI.ViewModels
 			NotifyOfPropertyChange(() => SubTotal);
 			NotifyOfPropertyChange(() => Tax);
 			NotifyOfPropertyChange(() => Total);
+			NotifyOfPropertyChange(() => CanCheckOut);
 		}
 
 		public bool CanCheckOut
@@ -192,14 +197,30 @@ namespace TRMDesktopUI.ViewModels
 			get
 			{
 				bool output = false;
+				
+				if(Cart.Count > 0)
+				{
+					output = true;
+				}
 
 				return output;
 			}
 		}
 
-		public void CheckOut()
+		public async Task CheckOut()
 		{
+			var sale = new SaleModel();
 
+			foreach (var item in Cart)
+			{
+				sale.SaleDetails.Add(new SaleDetailModel
+				{
+					ProductId = item.Product.Id
+					, Quantity = item.QuantityInCart
+				});
+			}
+
+			await saleEndpoint.PostSale(sale);
 		}
 	}
 }
