@@ -1,0 +1,4 @@
+Moved to desktop.
+Added TRMData.publish.xml to git repo, becouse it was only on laptop.
+EFData.mdf is needed for solution to run.
+But its not added as part of solution and repo. Besides one commit.
