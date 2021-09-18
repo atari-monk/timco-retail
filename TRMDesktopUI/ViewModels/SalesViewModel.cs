@@ -19,6 +19,7 @@ namespace TRMDesktopUI.ViewModels
 		private readonly IMapper mapper;
 		private BindingList<ProductDisplayModel> products;
 		private ProductDisplayModel selectedProduct;
+		private CartItemDisplayModel selectedCartItem;
 		private BindingList<CartItemDisplayModel> cart = new BindingList<CartItemDisplayModel>();
 		private int itemQuantity = 1;
 
@@ -40,6 +41,17 @@ namespace TRMDesktopUI.ViewModels
 				selectedProduct = value;
 				NotifyOfPropertyChange(() => SelectedProduct);
 				NotifyOfPropertyChange(() => CanAddToCart);
+			}
+		}
+
+		public CartItemDisplayModel SelectedCartItem
+		{
+			get { return selectedCartItem; }
+			set
+			{
+				selectedCartItem = value;
+				NotifyOfPropertyChange(() => selectedCartItem);
+				NotifyOfPropertyChange(() => CanRemoveFromCart);
 			}
 		}
 
@@ -184,12 +196,28 @@ namespace TRMDesktopUI.ViewModels
 			{
 				bool output = false;
 
+				if(SelectedCartItem != null && SelectedCartItem?.Product.QuantityInStock > 0)
+				{
+					output = true;
+				}
+
 				return output;
 			}
 		}
 
 		public void RemoveFromCart()
 		{
+			SelectedCartItem.Product.QuantityInStock += 1;
+
+			if (SelectedCartItem.QuantityInCart > 1)
+			{
+				SelectedCartItem.QuantityInCart -= 1;
+			}
+			else
+			{
+				Cart.Remove(SelectedCartItem);
+			}
+
 			NotifyOfPropertyChange(() => SubTotal);
 			NotifyOfPropertyChange(() => Tax);
 			NotifyOfPropertyChange(() => Total);
