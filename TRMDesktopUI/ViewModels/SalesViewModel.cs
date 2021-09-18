@@ -1,10 +1,13 @@
-﻿using Caliburn.Micro;
+﻿using AutoMapper;
+using Caliburn.Micro;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using TRMDesktopUI.Library.Api;
 using TRMDesktopUI.Library.Helpers;
 using TRMDesktopUI.Library.Models;
+using TRMDesktopUI.Models;
 
 namespace TRMDesktopUI.ViewModels
 {
@@ -13,12 +16,13 @@ namespace TRMDesktopUI.ViewModels
 		private readonly IProductEndpoint productEndpoint;
 		private readonly ISaleEndpoint saleEndpoint;
 		private readonly IConfigHelper configHelper;
-		private BindingList<ProductModel> products;
-		private ProductModel selectedProduct;
-		private BindingList<CartItemModel> cart = new BindingList<CartItemModel>();
+		private readonly IMapper mapper;
+		private BindingList<ProductDisplayModel> products;
+		private ProductDisplayModel selectedProduct;
+		private BindingList<CartItemDisplayModel> cart = new BindingList<CartItemDisplayModel>();
 		private int itemQuantity = 1;
 
-		public BindingList<ProductModel> Products
+		public BindingList<ProductDisplayModel> Products
 		{
 			get { return products; }
 			set 
@@ -28,7 +32,7 @@ namespace TRMDesktopUI.ViewModels
 			}
 		}
 
-		public ProductModel SelectedProduct
+		public ProductDisplayModel SelectedProduct
 		{
 			get { return selectedProduct; }
 			set 
@@ -39,7 +43,7 @@ namespace TRMDesktopUI.ViewModels
 			}
 		}
 
-		public BindingList<CartItemModel> Cart
+		public BindingList<CartItemDisplayModel> Cart
 		{
 			get { return cart; }
 			set 
@@ -72,7 +76,7 @@ namespace TRMDesktopUI.ViewModels
 		{
 			decimal subTotal = 0;
 
-			foreach (CartItemModel item in Cart)
+			foreach (CartItemDisplayModel item in Cart)
 			{
 				subTotal += item.Product.RetailPrice * item.QuantityInCart;
 			}
@@ -127,11 +131,13 @@ namespace TRMDesktopUI.ViewModels
 		public SalesViewModel(
 			IProductEndpoint productEndpoint
 			, ISaleEndpoint saleEndpoint
-			, IConfigHelper configHelper)
+			, IConfigHelper configHelper
+			, IMapper mapper)
 		{
 			this.productEndpoint = productEndpoint;
 			this.saleEndpoint = saleEndpoint;
 			this.configHelper = configHelper;
+			this.mapper = mapper;
 		}
 
 		protected override async void OnViewLoaded(object view)
@@ -142,8 +148,9 @@ namespace TRMDesktopUI.ViewModels
 
 		private async Task LoadProducts()
 		{
-			var products = await productEndpoint.GetAll();
-			Products = new BindingList<ProductModel>(products);
+			var productsList = await productEndpoint.GetAll();
+			var products = mapper.Map<List<ProductDisplayModel>>(productsList);
+			Products = new BindingList<ProductDisplayModel>(products);
 		}
 
 		public void AddToCart()
@@ -152,13 +159,10 @@ namespace TRMDesktopUI.ViewModels
 			if(existingItem != null)
 			{
 				existingItem.QuantityInCart += ItemQuantity;
-				//HACK - there should be a better way of refreshing the cart display
-				Cart.Remove(existingItem);
-				Cart.Add(existingItem);
 			}
 			else
 			{
-				var item = new CartItemModel
+				var item = new CartItemDisplayModel
 				{
 					Product = SelectedProduct
 					, QuantityInCart = ItemQuantity
