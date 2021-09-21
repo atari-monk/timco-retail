@@ -1,0 +1,11 @@
+Save sale plan
+//Start filling in the sale details models we will save to database
+//Get the information about this product
+//Fill in the available information
+//Create the Sale model
+//Save the sale model
+//Get the ID for the sale model
+//Finish filling in the sale detail models
+//Save the sale detail models
+
+

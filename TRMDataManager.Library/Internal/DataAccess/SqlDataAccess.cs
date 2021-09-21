@@ -116,11 +116,5 @@ namespace TRMDataManager.Library.Internal.DataAccess
 
 			return rows;
 		}
-
-		//Open connection/start transaction method
-		//load using transaction
-		//save using transaction
-		//Close connection/stop transaction
-		//dispose
 	}
 }

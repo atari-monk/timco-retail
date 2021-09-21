@@ -1,0 +1,7 @@
+plan for inventory:
+
+GetInventory - gets all the existing inventory
+InsertInventory - add a new inventory record
+GetProducts - gets all of the products
+
+GetSales - gets a summary of sales

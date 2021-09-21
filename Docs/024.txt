@@ -1,0 +1,6 @@
+Transactions in sales checkout
+//Open connection/start transaction method
+//load using transaction
+//save using transaction
+//Close connection/stop transaction
+//dispose
