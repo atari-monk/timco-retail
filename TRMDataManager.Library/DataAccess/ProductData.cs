@@ -3,7 +3,7 @@ using System.Linq;
 using TRMDataManager.Library.Internal.DataAccess;
 using TRMDataManager.Library.Models;
 
-namespace TRMDataManager.Library.DataAccess
+namespace TRMDataManager.Library.SqlDataAcces
 {
 	public class ProductData
 	{
