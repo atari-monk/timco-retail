@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
 using Caliburn.Micro;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using TRMDesktopUI.Library.Api;
 using TRMDesktopUI.Library.Helpers;
 using TRMDesktopUI.Library.Models;
@@ -17,6 +20,8 @@ namespace TRMDesktopUI.ViewModels
 		private readonly ISaleEndpoint saleEndpoint;
 		private readonly IConfigHelper configHelper;
 		private readonly IMapper mapper;
+		private readonly StatusInfoViewModel status;
+		private readonly IWindowManager windowManager;
 		private BindingList<ProductDisplayModel> products;
 		private ProductDisplayModel selectedProduct;
 		private CartItemDisplayModel selectedCartItem;
@@ -26,8 +31,8 @@ namespace TRMDesktopUI.ViewModels
 		public BindingList<ProductDisplayModel> Products
 		{
 			get { return products; }
-			set 
-			{ 
+			set
+			{
 				products = value;
 				NotifyOfPropertyChange(() => Products);
 			}
@@ -36,8 +41,8 @@ namespace TRMDesktopUI.ViewModels
 		public ProductDisplayModel SelectedProduct
 		{
 			get { return selectedProduct; }
-			set 
-			{ 
+			set
+			{
 				selectedProduct = value;
 				NotifyOfPropertyChange(() => SelectedProduct);
 				NotifyOfPropertyChange(() => CanAddToCart);
@@ -58,8 +63,8 @@ namespace TRMDesktopUI.ViewModels
 		public BindingList<CartItemDisplayModel> Cart
 		{
 			get { return cart; }
-			set 
-			{ 
+			set
+			{
 				cart = value;
 				NotifyOfPropertyChange(() => Cart);
 			}
@@ -68,16 +73,16 @@ namespace TRMDesktopUI.ViewModels
 		public int ItemQuantity
 		{
 			get { return itemQuantity; }
-			set 
-			{ 
+			set
+			{
 				itemQuantity = value;
 				NotifyOfPropertyChange(() => ItemQuantity);
 				NotifyOfPropertyChange(() => CanAddToCart);
 			}
 		}
 
-		public string SubTotal 
-		{ 
+		public string SubTotal
+		{
 			get
 			{
 				return CalculateSubTotal().ToString("C");
@@ -95,11 +100,11 @@ namespace TRMDesktopUI.ViewModels
 
 			return subTotal;
 		}
-		
+
 		private decimal CalculateTax()
 		{
 			decimal taxAmount = 0;
-			decimal taxRate = configHelper.GetTaxRate()/100;
+			decimal taxRate = configHelper.GetTaxRate() / 100;
 
 			taxAmount = Cart
 				.Where(x => x.Product.IsTaxable)
@@ -131,7 +136,7 @@ namespace TRMDesktopUI.ViewModels
 			{
 				bool output = false;
 
-				if(ItemQuantity > 0 && SelectedProduct?.QuantityInStock >= ItemQuantity)
+				if (ItemQuantity > 0 && SelectedProduct?.QuantityInStock >= ItemQuantity)
 				{
 					output = true;
 				}
@@ -144,12 +149,16 @@ namespace TRMDesktopUI.ViewModels
 			IProductEndpoint productEndpoint
 			, ISaleEndpoint saleEndpoint
 			, IConfigHelper configHelper
-			, IMapper mapper)
+			, IMapper mapper
+			, StatusInfoViewModel status
+			, IWindowManager windowManager)
 		{
 			this.productEndpoint = productEndpoint;
 			this.saleEndpoint = saleEndpoint;
 			this.configHelper = configHelper;
 			this.mapper = mapper;
+			this.status = status;
+			this.windowManager = windowManager;
 		}
 
 		private async Task ResetSalesViewModel()
@@ -166,7 +175,34 @@ namespace TRMDesktopUI.ViewModels
 		protected override async void OnViewLoaded(object view)
 		{
 			base.OnViewLoaded(view);
-			await LoadProducts();
+			try
+			{
+				await LoadProducts();
+			}
+			catch (Exception ex)
+			{
+				dynamic settings = new ExpandoObject();
+				settings.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+				settings.ResizeMode = ResizeMode.NoResize;
+				settings.Title = "System Error";
+
+				if (ex.Message == "Unauthorized")
+				{
+					status.UpdateMessage(
+						"Unauthorized Access"
+						, "You dont have permission to interact with the Sales Form.");
+					windowManager.ShowDialog(status, null, settings); 
+				}
+				else
+				{
+					status.UpdateMessage(
+						"FatalException"
+						, ex.Message);
+					windowManager.ShowDialog(status, null, settings);
+				}
+
+				TryClose();
+			}
 		}
 
 		private async Task LoadProducts()
@@ -179,7 +215,7 @@ namespace TRMDesktopUI.ViewModels
 		public void AddToCart()
 		{
 			var existingItem = Cart.FirstOrDefault(x => x.Product == SelectedProduct);
-			if(existingItem != null)
+			if (existingItem != null)
 			{
 				existingItem.QuantityInCart += ItemQuantity;
 			}
@@ -188,7 +224,8 @@ namespace TRMDesktopUI.ViewModels
 				var item = new CartItemDisplayModel
 				{
 					Product = SelectedProduct
-					, QuantityInCart = ItemQuantity
+					,
+					QuantityInCart = ItemQuantity
 				};
 				Cart.Add(item);
 			}
@@ -207,7 +244,7 @@ namespace TRMDesktopUI.ViewModels
 			{
 				bool output = false;
 
-				if(SelectedCartItem != null && SelectedCartItem?.QuantityInCart > 0)
+				if (SelectedCartItem != null && SelectedCartItem?.QuantityInCart > 0)
 				{
 					output = true;
 				}
@@ -241,8 +278,8 @@ namespace TRMDesktopUI.ViewModels
 			get
 			{
 				bool output = false;
-				
-				if(Cart.Count > 0)
+
+				if (Cart.Count > 0)
 				{
 					output = true;
 				}
@@ -260,7 +297,8 @@ namespace TRMDesktopUI.ViewModels
 				sale.SaleDetails.Add(new SaleDetailModel
 				{
 					ProductId = item.Product.Id
-					, Quantity = item.QuantityInCart
+					,
+					Quantity = item.QuantityInCart
 				});
 			}
 
