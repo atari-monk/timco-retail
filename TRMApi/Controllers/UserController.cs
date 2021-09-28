@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -19,13 +20,16 @@ namespace TRMApi.Controllers
 	{
 		private readonly ApplicationDbContext context;
 		private readonly UserManager<IdentityUser> userManager;
+		private readonly IConfiguration config;
 
 		public UserController(
 			ApplicationDbContext context
-			, UserManager<IdentityUser> userManager)
+			, UserManager<IdentityUser> userManager
+			, IConfiguration config)
 		{
 			this.context = context;
 			this.userManager = userManager;
+			this.config = config;
 		}
 
 		[HttpGet]
@@ -33,14 +37,14 @@ namespace TRMApi.Controllers
 		{
 			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-			var data = new UserData();
+			var data = new UserData(config);
 
 			return data.GetUserById(userId).First();
 		}
 
 		[Authorize(Roles = "Admin")]
 		[HttpGet]
-		[Route("api/User/Admin/GetAllUsers")]
+		[Route("Admin/GetAllUsers")]
 		public List<ApplicationUserModel> GetAllUsers()
 		{
 			var output = new List<ApplicationUserModel>();
@@ -68,7 +72,7 @@ namespace TRMApi.Controllers
 
 		[Authorize(Roles = "Admin")]
 		[HttpGet]
-		[Route("api/User/Admin/GetAllRoles")]
+		[Route("Admin/GetAllRoles")]
 		public Dictionary<string, string> GetAllRoles()
 		{
 			var roles = context.Roles.ToDictionary(x => x.Id, x => x.Name);
@@ -78,7 +82,7 @@ namespace TRMApi.Controllers
 
 		[Authorize(Roles = "Admin")]
 		[HttpPost]
-		[Route("api/User/Admin/AddRole")]
+		[Route("Admin/AddRole")]
 		public async Task AddRole(UserRolePairModel pairing)
 		{
 			var user = await userManager.FindByIdAsync(pairing.UserId);
@@ -87,7 +91,7 @@ namespace TRMApi.Controllers
 
 		[Authorize(Roles = "Admin")]
 		[HttpPost]
-		[Route("api/User/Admin/RemoveRole")]
+		[Route("Admin/RemoveRole")]
 		public async Task RemoveRole(UserRolePairModel pairing)
 		{
 			var user = await userManager.FindByIdAsync(pairing.UserId);

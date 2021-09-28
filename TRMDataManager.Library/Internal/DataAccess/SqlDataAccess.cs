@@ -1,7 +1,7 @@
 ﻿using Dapper;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -13,10 +13,16 @@ namespace TRMDataManager.Library.Internal.DataAccess
 		private IDbConnection connection;
 		private IDbTransaction transaction;
 		private bool isClosed = false;
+		private readonly IConfiguration config;
+
+		public SqlDataAccess(IConfiguration config)
+		{
+			this.config = config;
+		}
 
 		public string GetConnectionString(string name)
 		{
-			return ConfigurationManager.ConnectionStrings[name].ConnectionString;
+			return config.GetConnectionString(name);
 		}
 
 		public List<T> LoadData<T, U>(

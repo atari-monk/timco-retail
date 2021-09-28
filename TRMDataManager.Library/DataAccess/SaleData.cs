@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TRMDataManager.Library.Internal.DataAccess;
@@ -8,11 +9,18 @@ namespace TRMDataManager.Library.SqlDataAcces
 {
 	public class SaleData
 	{
+		private readonly IConfiguration config;
+
+		public SaleData(IConfiguration config)
+		{
+			this.config = config;
+		}
+
 		public void SaveSale(SaleModel saleInfo, string cashierId)
 		{
 			//TODO: Make this SOLID/DRY/Better
 			var details = new List<SaleDetailDBModel>();
-			var products = new ProductData();
+			var products = new ProductData(config);
 			var taxRate = ConfigHelper.GetTaxRate()/100;
 
 			foreach (var item in saleInfo.SaleDetails)
@@ -49,7 +57,7 @@ namespace TRMDataManager.Library.SqlDataAcces
 
 			sale.Total = sale.SubTotal + sale.Tax;
 
-			using (var sql = new SqlDataAccess())
+			using (var sql = new SqlDataAccess(config))
 			{
 				try
 				{
@@ -77,7 +85,7 @@ namespace TRMDataManager.Library.SqlDataAcces
 
 		public List<SaleReportModel> GetSaleReport()
 		{
-			var sql = new SqlDataAccess();
+			var sql = new SqlDataAccess(config);
 			var output = sql.LoadData<SaleReportModel, dynamic>("dbo.spSale_SaleReport", new { }, "TRMData");
 			return output;
 		}
