@@ -1,0 +1,2 @@
+Nuget Source for caliburn Micro:
+https://www.myget.org/F/caliburn-micro-builds/api/v3/index.json

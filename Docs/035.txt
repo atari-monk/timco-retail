@@ -1,0 +1,5 @@
+In Home Controller Privacy 
+there is db Roles seed.
+Auth sys changed.
+New base is made by registering.
+Roles added by executing seed code from privacy page.
