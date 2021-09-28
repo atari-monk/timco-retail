@@ -191,17 +191,17 @@ namespace TRMDesktopUI.ViewModels
 					status.UpdateMessage(
 						"Unauthorized Access"
 						, "You dont have permission to interact with the Sales Form.");
-					windowManager.ShowDialog(status, null, settings); 
+					await windowManager.ShowDialogAsync(status, null, settings); 
 				}
 				else
 				{
 					status.UpdateMessage(
 						"FatalException"
 						, ex.Message);
-					windowManager.ShowDialog(status, null, settings);
+					await windowManager.ShowDialogAsync(status, null, settings);
 				}
 
-				TryClose();
+				TryCloseAsync();
 			}
 		}
 
