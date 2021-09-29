@@ -1,0 +1,3 @@
+This is slightly incorrect.
+You can get Azure DevOps without ANY azure subscription.
+The URL you should use is dev.azure.com for your main entrance page.
