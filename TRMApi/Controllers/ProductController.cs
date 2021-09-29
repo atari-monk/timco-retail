@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using TRMDataManager.Library.Models;
 using TRMDataManager.Library.SqlDataAcces;
@@ -12,19 +11,17 @@ namespace TRMApi.Controllers
 	[Authorize(Roles = "Cashier")]
 	public class ProductController : ControllerBase
 	{
-		private readonly IConfiguration config;
+		private readonly IProductData productData;
 
-		public ProductController(IConfiguration config)
+		public ProductController(IProductData productData)
 		{
-			this.config = config;
+			this.productData = productData;
 		}
 
 		[HttpGet]
 		public List<ProductModel> Get()
 		{
-			var data = new ProductData(config);
-
-			return data.GetProducts();
+			return productData.GetProducts();
 		}
 	}
 }

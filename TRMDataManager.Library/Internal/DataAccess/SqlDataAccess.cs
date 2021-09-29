@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace TRMDataManager.Library.Internal.DataAccess
 {
-	public class SqlDataAccess : IDisposable
+	public class SqlDataAccess : IDisposable, ISqlDataAccess
 	{
 		private IDbConnection connection;
 		private IDbTransaction transaction;
@@ -84,7 +84,7 @@ namespace TRMDataManager.Library.Internal.DataAccess
 
 		public void Dispose()
 		{
-			if(isClosed == false)
+			if (isClosed == false)
 			{
 				try
 				{
