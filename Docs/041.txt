@@ -1,0 +1,4 @@
+https://portal.azure.com/#home
+Dashboard
+TimCoResourceGroup
+Deploy API to Azure cloud
