@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Security.Claims;
 using TRMDataManager.Library.Models;
@@ -34,6 +33,14 @@ namespace TRMApi.Controllers
 		public List<SaleReportModel> GetSalesReport()
 		{
 			return saleData.GetSaleReport();
+		}
+
+		[AllowAnonymous]
+		[Route("GetTaxRate")]
+		[HttpGet]
+		public decimal GetTaxRate()
+		{
+			return saleData.GetTaxRate();
 		}
 	}
 }
