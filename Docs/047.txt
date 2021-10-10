@@ -1,0 +1,5 @@
+Postman 
+testowanie API
+autentykacja 
+pozyskanie tokena
+i użycie w zapytaniach do API
