@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Caliburn.Micro;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -8,7 +9,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using TRMDesktopUI.Library.Api;
-using TRMDesktopUI.Library.Helpers;
 using TRMDesktopUI.Library.Models;
 using TRMDesktopUI.Models;
 
@@ -18,7 +18,7 @@ namespace TRMDesktopUI.ViewModels
 	{
 		private readonly IProductEndpoint productEndpoint;
 		private readonly ISaleEndpoint saleEndpoint;
-		private readonly IConfigHelper configHelper;
+		private readonly IConfiguration config;
 		private readonly IMapper mapper;
 		private readonly StatusInfoViewModel status;
 		private readonly IWindowManager windowManager;
@@ -104,7 +104,7 @@ namespace TRMDesktopUI.ViewModels
 		private decimal CalculateTax()
 		{
 			decimal taxAmount = 0;
-			decimal taxRate = configHelper.GetTaxRate() / 100;
+			decimal taxRate = config.GetValue<decimal>("taxRate")/100;
 
 			taxAmount = Cart
 				.Where(x => x.Product.IsTaxable)
@@ -148,14 +148,14 @@ namespace TRMDesktopUI.ViewModels
 		public SalesViewModel(
 			IProductEndpoint productEndpoint
 			, ISaleEndpoint saleEndpoint
-			, IConfigHelper configHelper
+			, IConfiguration config
 			, IMapper mapper
 			, StatusInfoViewModel status
 			, IWindowManager windowManager)
 		{
 			this.productEndpoint = productEndpoint;
 			this.saleEndpoint = saleEndpoint;
-			this.configHelper = configHelper;
+			this.config = config;
 			this.mapper = mapper;
 			this.status = status;
 			this.windowManager = windowManager;
