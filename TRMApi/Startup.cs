@@ -11,7 +11,6 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System;
 using TRMDataManager.Library.DataAccess;
-using TRMDataManager.Library.Internal.DataAccess;
 using TRMDataManager.Library.SqlDataAcces;
 
 namespace TRMApi
