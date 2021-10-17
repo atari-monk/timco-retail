@@ -19,6 +19,7 @@ namespace Portal.Authentication
 		{
 			this.httpClient = httpClient;
 			this.localStorage = localStorage;
+			anonymous = new AuthenticationState(user: new ClaimsPrincipal(identity: new ClaimsIdentity()));
 		}
 
 		public override async Task<AuthenticationState> GetAuthenticationStateAsync()

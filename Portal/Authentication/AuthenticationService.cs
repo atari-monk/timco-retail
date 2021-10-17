@@ -35,7 +35,7 @@ namespace Portal.Authentication
 			});
 
 			var authResult = await client.PostAsync(
-				"https://localhost:44350/token"
+				"https://localhost:44363/token"
 				, data);
 			var authContent = await authResult.Content.ReadAsStringAsync();
 
