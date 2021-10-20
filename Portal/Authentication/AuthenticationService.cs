@@ -1,5 +1,6 @@
 ﻿using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.Extensions.Configuration;
 using Portal.Models;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -14,15 +15,20 @@ namespace Portal.Authentication
 		private readonly HttpClient client;
 		private readonly AuthenticationStateProvider authStateProvider;
 		private readonly ILocalStorageService localStorage;
+		private readonly IConfiguration config;
+		private readonly string authTokenStorageKey;
 
 		public AuthenticationService(
 			HttpClient client
 			, AuthenticationStateProvider authStateProvider
-			, ILocalStorageService localStorage)
+			, ILocalStorageService localStorage
+			, IConfiguration config)
 		{
 			this.client = client;
 			this.authStateProvider = authStateProvider;
 			this.localStorage = localStorage;
+			this.config = config;
+			authTokenStorageKey = config["authTokenStorageKey"];
 		}
 
 		public async Task<AuthenticatedUserModel> Login(AuthenticationUserModel userForAuthentication)
@@ -35,7 +41,7 @@ namespace Portal.Authentication
 			});
 
 			var authResult = await client.PostAsync(
-				"https://localhost:44363/token"
+				config["apiLocation"] + config["tokenEndpoint"]
 				, data);
 			var authContent = await authResult.Content.ReadAsStringAsync();
 
@@ -48,7 +54,7 @@ namespace Portal.Authentication
 				authContent
 				, options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-			await localStorage.SetItemAsync(key: "authToken", result.Access_Token);
+			await localStorage.SetItemAsync(key: authTokenStorageKey, result.Access_Token);
 
 			((AuthStateProvider)authStateProvider).NotifyUserAuthentication(result.Access_Token);
 
@@ -60,7 +66,7 @@ namespace Portal.Authentication
 
 		public async Task Logout()
 		{
-			await localStorage.RemoveItemAsync(key: "authToken");
+			await localStorage.RemoveItemAsync(key: authTokenStorageKey);
 			((AuthStateProvider)authStateProvider).NotifyUserLogout();
 			client.DefaultRequestHeaders.Authorization = null;
 		}
