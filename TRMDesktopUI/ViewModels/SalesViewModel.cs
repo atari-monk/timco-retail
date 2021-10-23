@@ -25,7 +25,7 @@ namespace TRMDesktopUI.ViewModels
 		private BindingList<ProductDisplayModel> products;
 		private ProductDisplayModel selectedProduct;
 		private CartItemDisplayModel selectedCartItem;
-		private BindingList<CartItemDisplayModel> cart = new BindingList<CartItemDisplayModel>();
+		private BindingList<CartItemDisplayModel> cart = new();
 		private int itemQuantity = 1;
 
 		public BindingList<ProductDisplayModel> Products
@@ -201,7 +201,7 @@ namespace TRMDesktopUI.ViewModels
 					await windowManager.ShowDialogAsync(status, null, settings);
 				}
 
-				TryCloseAsync();
+				await TryCloseAsync();
 			}
 		}
 

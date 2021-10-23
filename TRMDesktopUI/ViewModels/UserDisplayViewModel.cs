@@ -18,8 +18,8 @@ namespace TRMDesktopUI.ViewModels
 		private BindingList<UserModel> users;
 		private UserModel selectedUser;
 		private string selectedUserName;
-		private BindingList<string> userRoles = new BindingList<string>();
-		private BindingList<string> availableRoles = new BindingList<string>();
+		private BindingList<string> userRoles = new();
+		private BindingList<string> availableRoles = new();
 		private string selectedUserRole;
 		private string selectedAvailableRole;
 
@@ -48,7 +48,8 @@ namespace TRMDesktopUI.ViewModels
 				SelectedUserName = value.Email;
 				UserRoles.Clear();
 				UserRoles = new BindingList<string>(value.Roles.Select(x => x.Value).ToList());
-				LoadRoles();
+				//todo:pull this out into a method/event
+				LoadRoles().Wait();
 				NotifyOfPropertyChange(() => SelectedUser);
 			}
 		}
@@ -183,7 +184,7 @@ namespace TRMDesktopUI.ViewModels
 					await windowManager.ShowDialogAsync(status, null, settings);
 				}
 
-				TryCloseAsync();
+				await TryCloseAsync();
 			}
 		}
 
