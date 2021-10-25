@@ -53,17 +53,15 @@ namespace TRMDesktopUI.Library.Api
 					, new KeyValuePair<string,string>("password", password)
 				});
 
-			using (HttpResponseMessage response = await apiClient.PostAsync("/Token", data))
+			using HttpResponseMessage response = await apiClient.PostAsync("/Token", data);
+			if (response.IsSuccessStatusCode)
 			{
-				if (response.IsSuccessStatusCode)
-				{
-					var result = await response.Content.ReadAsAsync<AuthenticatedUser>();
-					return result;
-				}
-				else
-				{
-					throw new Exception(response.ReasonPhrase);
-				}
+				var result = await response.Content.ReadAsAsync<AuthenticatedUser>();
+				return result;
+			}
+			else
+			{
+				throw new Exception(response.ReasonPhrase);
 			}
 		}
 
@@ -79,22 +77,20 @@ namespace TRMDesktopUI.Library.Api
 			apiClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 			apiClient.DefaultRequestHeaders.Add("Authorization", $"Bearer { token }");
 
-			using (HttpResponseMessage response = await apiClient.GetAsync("/api/User"))
+			using HttpResponseMessage response = await apiClient.GetAsync("/api/User");
+			if (response.IsSuccessStatusCode)
 			{
-				if (response.IsSuccessStatusCode)
-				{
-					var result = await response.Content.ReadAsAsync<LoggedInUserModel>();
-					loggedInUser.CreatedDate = result.CreatedDate;
-					loggedInUser.EmailAddress = result.EmailAddress;
-					loggedInUser.FirstName = result.FirstName;
-					loggedInUser.LastName = result.LastName;
-					loggedInUser.Id = result.Id;
-					loggedInUser.Token = token;
-				}
-				else
-				{
-					throw new Exception(response.ReasonPhrase);
-				}
+				var result = await response.Content.ReadAsAsync<LoggedInUserModel>();
+				loggedInUser.CreatedDate = result.CreatedDate;
+				loggedInUser.EmailAddress = result.EmailAddress;
+				loggedInUser.FirstName = result.FirstName;
+				loggedInUser.LastName = result.LastName;
+				loggedInUser.Id = result.Id;
+				loggedInUser.Token = token;
+			}
+			else
+			{
+				throw new Exception(response.ReasonPhrase);
 			}
 		}
 	}

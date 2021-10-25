@@ -18,16 +18,14 @@ namespace TRMDesktopUI.Library.Api
 
 		public async Task<List<ProductModel>> GetAll()
 		{
-			using (HttpResponseMessage response = await apiHelper.ApiClient.GetAsync("/api/Product"))
+			using HttpResponseMessage response = await apiHelper.ApiClient.GetAsync("/api/Product");
+			if (response.IsSuccessStatusCode)
 			{
-				if (response.IsSuccessStatusCode)
-				{
-					return await response.Content.ReadAsAsync<List<ProductModel>>();
-				}
-				else
-				{
-					throw new Exception(response.ReasonPhrase);
-				}
+				return await response.Content.ReadAsAsync<List<ProductModel>>();
+			}
+			else
+			{
+				throw new Exception(response.ReasonPhrase);
 			}
 		}
 	}
