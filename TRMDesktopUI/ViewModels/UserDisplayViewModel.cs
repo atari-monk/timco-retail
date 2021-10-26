@@ -49,7 +49,7 @@ namespace TRMDesktopUI.ViewModels
 				UserRoles.Clear();
 				UserRoles = new BindingList<string>(value.Roles.Select(x => x.Value).ToList());
 				//todo:pull this out into a method/event
-				LoadRoles().Wait();
+				LoadRoles();
 				NotifyOfPropertyChange(() => SelectedUser);
 			}
 		}
