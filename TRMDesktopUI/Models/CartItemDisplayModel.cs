@@ -4,15 +4,19 @@ namespace TRMDesktopUI.Models
 {
 	public class CartItemDisplayModel : INotifyPropertyChanged
 	{
-		public ProductDisplayModel Product { get; set; }
+		public ProductDisplayModel Product
+		{
+			get; set;
+		}
 
 		private int quantityInCart;
 
 		public int QuantityInCart
 		{
-			get { return quantityInCart; }
-			set 
-			{ 
+			get {
+				return quantityInCart;
+			}
+			set {
 				quantityInCart = value;
 				CallPropertyChanged(nameof(QuantityInCart));
 				CallPropertyChanged(nameof(DisplayText));
@@ -21,8 +25,7 @@ namespace TRMDesktopUI.Models
 
 		public string DisplayText
 		{
-			get
-			{
+			get {
 				return $"{Product.ProductName} ({QuantityInCart})";
 			}
 		}

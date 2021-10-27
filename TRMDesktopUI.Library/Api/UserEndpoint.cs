@@ -31,11 +31,12 @@ namespace TRMDesktopUI.Library.Api
 
 		public async Task CreateUser(CreateUserModel model)
 		{
-			var data = new { 
+			var data = new {
 				model.FirstName
 				, model.LastName
 				, model.EmailAddress
-				, model.Password };
+				, model.Password
+			};
 
 			using var response = await apiHelper.ApiClient.PostAsJsonAsync("/api/User/Register", data);
 			if (response.IsSuccessStatusCode == false)
@@ -44,7 +45,7 @@ namespace TRMDesktopUI.Library.Api
 			}
 		}
 
-		public async Task<Dictionary<string,string>> GetAllRoles()
+		public async Task<Dictionary<string, string>> GetAllRoles()
 		{
 			using var response = await apiHelper.ApiClient.GetAsync("/api/User/Admin/GetAllRoles");
 			if (response.IsSuccessStatusCode)

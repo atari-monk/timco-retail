@@ -25,12 +25,10 @@ namespace TRMDesktopUI.ViewModels
 
 		public BindingList<UserModel> Users
 		{
-			get
-			{
+			get {
 				return users;
 			}
-			set
-			{
+			set {
 				users = value;
 				NotifyOfPropertyChange(() => Users);
 			}
@@ -38,12 +36,10 @@ namespace TRMDesktopUI.ViewModels
 
 		public UserModel SelectedUser
 		{
-			get
-			{
+			get {
 				return selectedUser;
 			}
-			set
-			{
+			set {
 				selectedUser = value;
 				SelectedUserName = value.Email;
 				UserRoles.Clear();
@@ -56,9 +52,10 @@ namespace TRMDesktopUI.ViewModels
 
 		public string SelectedUserRole
 		{
-			get { return selectedUserRole; }
-			set 
-			{ 
+			get {
+				return selectedUserRole;
+			}
+			set {
 				selectedUserRole = value;
 				NotifyOfPropertyChange(() => SelectedUserRole);
 				NotifyOfPropertyChange(() => CanRemoveSelectedRole);
@@ -67,9 +64,10 @@ namespace TRMDesktopUI.ViewModels
 
 		public string SelectedAvailableRole
 		{
-			get { return selectedAvailableRole; }
-			set
-			{
+			get {
+				return selectedAvailableRole;
+			}
+			set {
 				selectedAvailableRole = value;
 				NotifyOfPropertyChange(() => SelectedAvailableRole);
 				NotifyOfPropertyChange(() => CanAddSelectedRole);
@@ -78,12 +76,10 @@ namespace TRMDesktopUI.ViewModels
 
 		public string SelectedUserName
 		{
-			get
-			{
+			get {
 				return selectedUserName;
 			}
-			set
-			{
+			set {
 				selectedUserName = value;
 				NotifyOfPropertyChange(() => SelectedUserName);
 			}
@@ -91,12 +87,10 @@ namespace TRMDesktopUI.ViewModels
 
 		public BindingList<string> UserRoles
 		{
-			get
-			{
+			get {
 				return userRoles;
 			}
-			set
-			{
+			set {
 				userRoles = value;
 				NotifyOfPropertyChange(() => UserRoles);
 			}
@@ -104,12 +98,10 @@ namespace TRMDesktopUI.ViewModels
 
 		public BindingList<string> AvailableRoles
 		{
-			get
-			{
+			get {
 				return availableRoles;
 			}
-			set
-			{
+			set {
 				availableRoles = value;
 				NotifyOfPropertyChange(() => AvailableRoles);
 			}
@@ -117,8 +109,7 @@ namespace TRMDesktopUI.ViewModels
 
 		public bool CanAddSelectedRole
 		{
-			get
-			{
+			get {
 				if (SelectedUser is null || SelectedAvailableRole is null)
 				{
 					return false;
@@ -132,8 +123,7 @@ namespace TRMDesktopUI.ViewModels
 
 		public bool CanRemoveSelectedRole
 		{
-			get
-			{
+			get {
 				if (SelectedUser is null || SelectedUserRole is null)
 				{
 					return false;
@@ -200,7 +190,7 @@ namespace TRMDesktopUI.ViewModels
 			var roles = await userEndpoint.GetAllRoles();
 			foreach (var role in roles)
 			{
-				if(UserRoles.IndexOf(role.Value) < 0)
+				if (UserRoles.IndexOf(role.Value) < 0)
 				{
 					AvailableRoles.Add(role.Value);
 				}

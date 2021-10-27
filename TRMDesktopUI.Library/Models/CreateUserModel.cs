@@ -7,23 +7,38 @@ namespace TRMDesktopUI.Library.Models
 	{
 		[Required]
 		[DisplayName("First Name")]
-		public string FirstName { get; set; }
+		public string FirstName
+		{
+			get; set;
+		}
 
 		[Required]
 		[DisplayName("Last Name")]
-		public string LastName { get; set; }
+		public string LastName
+		{
+			get; set;
+		}
 
 		[Required]
 		[EmailAddress]
 		[DisplayName("Email Address")]
-		public string EmailAddress { get; set; }
+		public string EmailAddress
+		{
+			get; set;
+		}
 
 		[Required]
-		public string Password { get; set; }
+		public string Password
+		{
+			get; set;
+		}
 
 		[Required]
 		[DisplayName("Confirm Password")]
 		[Compare(nameof(Password), ErrorMessage = "The passwords do not match")]
-		public string ConfirmPassword { get; set; }
+		public string ConfirmPassword
+		{
+			get; set;
+		}
 	}
 }

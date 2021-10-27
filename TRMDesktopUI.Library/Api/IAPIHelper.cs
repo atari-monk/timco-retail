@@ -6,7 +6,10 @@ namespace TRMDesktopUI.Library.Api
 {
 	public interface IAPIHelper
 	{
-		HttpClient ApiClient { get; }
+		HttpClient ApiClient
+		{
+			get;
+		}
 
 		Task<AuthenticatedUser> Authenticate(string username, string password);
 

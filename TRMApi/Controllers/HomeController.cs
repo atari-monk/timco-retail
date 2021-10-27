@@ -46,7 +46,7 @@ namespace TRMApi.Controllers
 				await userManager.AddToRoleAsync(user, "Cashier");
 			}
 
-			await Task.Run(()=> { });
+			await Task.Run(() => { });
 
 			return View();
 		}

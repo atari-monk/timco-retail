@@ -30,7 +30,7 @@ namespace Portal.Authentication
 		{
 			keyValuePairs.TryGetValue(ClaimTypes.Role, out object roles);
 
-			if(roles is not null)
+			if (roles is not null)
 			{
 				var parsedRoles = roles.ToString()
 					.Trim()
@@ -38,7 +38,7 @@ namespace Portal.Authentication
 					.TrimEnd(trimChar: ']')
 					.Split(separator: ',');
 
-				if(parsedRoles.Length > 1)
+				if (parsedRoles.Length > 1)
 				{
 					foreach (var parsedRole in parsedRoles)
 					{
@@ -62,7 +62,7 @@ namespace Portal.Authentication
 
 		private static byte[] ParseBase64WithoutPadding(string base64)
 		{
-			switch(base64.Length % 4)
+			switch (base64.Length % 4)
 			{
 				case 2:
 					base64 += "==";

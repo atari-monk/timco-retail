@@ -5,7 +5,6 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 
 namespace TRMDataManager.Library.DataAccess
@@ -96,7 +95,7 @@ namespace TRMDataManager.Library.DataAccess
 				{
 					CommitTransaction();
 				}
-				catch(Exception ex)
+				catch (Exception ex)
 				{
 					logger.LogError(ex, "Commit transaction failed in the dispose method.");
 				}

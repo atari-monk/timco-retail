@@ -1,15 +1,15 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using TRMApi.Data;
-using System.Linq;
-using System.Security.Claims;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System;
-using Microsoft.IdentityModel.Tokens;
+using System.Linq;
+using System.Security.Claims;
 using System.Text;
-using Microsoft.Extensions.Configuration;
+using System.Threading.Tasks;
+using TRMApi.Data;
 
 namespace TRMApi.Controllers
 {
@@ -36,7 +36,7 @@ namespace TRMApi.Controllers
 			, string password
 			, string grant_type)
 		{
-			if(await IsValidUsernameAndPassword(username, password))
+			if (await IsValidUsernameAndPassword(username, password))
 			{
 				return new ObjectResult(await GenerateToken(username));
 			}
@@ -56,14 +56,16 @@ namespace TRMApi.Controllers
 		{
 			var user = await userManager.FindByEmailAsync(username);
 			var roles = from ur in context.UserRoles
-						join r in context.Roles on ur.RoleId equals r.Id
-						where ur.UserId == user.Id
-						select new { ur.UserId, ur.RoleId, r.Name };
+									join r in context.Roles on ur.RoleId equals r.Id
+									where ur.UserId == user.Id
+									select new {
+										ur.UserId, ur.RoleId, r.Name
+									};
 			var claims = new List<Claim>
 			{
 				new Claim(ClaimTypes.Name, username)
 				, new Claim(ClaimTypes.NameIdentifier, user.Id)
-				, new Claim(JwtRegisteredClaimNames.Nbf, 
+				, new Claim(JwtRegisteredClaimNames.Nbf,
 					new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds().ToString())
 				, new Claim(JwtRegisteredClaimNames.Exp,
 					new DateTimeOffset(DateTime.Now.AddDays(1)).ToUnixTimeSeconds().ToString())
@@ -83,8 +85,7 @@ namespace TRMApi.Controllers
 							, SecurityAlgorithms.HmacSha256))
 				, new JwtPayload(claims));
 
-			var output = new
-			{
+			var output = new {
 				Access_Token = new JwtSecurityTokenHandler().WriteToken(token)
 				,
 				UserName = username

@@ -30,9 +30,10 @@ namespace TRMDesktopUI.ViewModels
 
 		public BindingList<ProductDisplayModel> Products
 		{
-			get { return products; }
-			set
-			{
+			get {
+				return products;
+			}
+			set {
 				products = value;
 				NotifyOfPropertyChange(() => Products);
 			}
@@ -40,9 +41,10 @@ namespace TRMDesktopUI.ViewModels
 
 		public ProductDisplayModel SelectedProduct
 		{
-			get { return selectedProduct; }
-			set
-			{
+			get {
+				return selectedProduct;
+			}
+			set {
 				selectedProduct = value;
 				NotifyOfPropertyChange(() => SelectedProduct);
 				NotifyOfPropertyChange(() => CanAddToCart);
@@ -51,9 +53,10 @@ namespace TRMDesktopUI.ViewModels
 
 		public CartItemDisplayModel SelectedCartItem
 		{
-			get { return selectedCartItem; }
-			set
-			{
+			get {
+				return selectedCartItem;
+			}
+			set {
 				selectedCartItem = value;
 				NotifyOfPropertyChange(() => selectedCartItem);
 				NotifyOfPropertyChange(() => CanRemoveFromCart);
@@ -62,9 +65,10 @@ namespace TRMDesktopUI.ViewModels
 
 		public BindingList<CartItemDisplayModel> Cart
 		{
-			get { return cart; }
-			set
-			{
+			get {
+				return cart;
+			}
+			set {
 				cart = value;
 				NotifyOfPropertyChange(() => Cart);
 			}
@@ -72,9 +76,10 @@ namespace TRMDesktopUI.ViewModels
 
 		public int ItemQuantity
 		{
-			get { return itemQuantity; }
-			set
-			{
+			get {
+				return itemQuantity;
+			}
+			set {
 				itemQuantity = value;
 				NotifyOfPropertyChange(() => ItemQuantity);
 				NotifyOfPropertyChange(() => CanAddToCart);
@@ -83,8 +88,7 @@ namespace TRMDesktopUI.ViewModels
 
 		public string SubTotal
 		{
-			get
-			{
+			get {
 				return CalculateSubTotal().ToString("C");
 			}
 		}
@@ -104,7 +108,7 @@ namespace TRMDesktopUI.ViewModels
 		private decimal CalculateTax()
 		{
 			decimal taxAmount = 0;
-			decimal taxRate = config.GetValue<decimal>("taxRate")/100;
+			decimal taxRate = config.GetValue<decimal>("taxRate") / 100;
 
 			taxAmount = Cart
 				.Where(x => x.Product.IsTaxable)
@@ -115,16 +119,14 @@ namespace TRMDesktopUI.ViewModels
 
 		public string Tax
 		{
-			get
-			{
+			get {
 				return CalculateTax().ToString("C");
 			}
 		}
 
 		public string Total
 		{
-			get
-			{
+			get {
 				decimal total = CalculateSubTotal() + CalculateTax();
 				return total.ToString("C"); ;
 			}
@@ -132,8 +134,7 @@ namespace TRMDesktopUI.ViewModels
 
 		public bool CanAddToCart
 		{
-			get
-			{
+			get {
 				bool output = false;
 
 				if (ItemQuantity > 0 && SelectedProduct?.QuantityInStock >= ItemQuantity)
@@ -191,7 +192,7 @@ namespace TRMDesktopUI.ViewModels
 					status.UpdateMessage(
 						"Unauthorized Access"
 						, "You dont have permission to interact with the Sales Form.");
-					await windowManager.ShowDialogAsync(status, null, settings); 
+					await windowManager.ShowDialogAsync(status, null, settings);
 				}
 				else
 				{
@@ -240,8 +241,7 @@ namespace TRMDesktopUI.ViewModels
 
 		public bool CanRemoveFromCart
 		{
-			get
-			{
+			get {
 				bool output = false;
 
 				if (SelectedCartItem != null && SelectedCartItem?.QuantityInCart > 0)
@@ -275,8 +275,7 @@ namespace TRMDesktopUI.ViewModels
 
 		public bool CanCheckOut
 		{
-			get
-			{
+			get {
 				bool output = false;
 
 				if (Cart.Count > 0)

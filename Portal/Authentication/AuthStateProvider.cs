@@ -27,7 +27,7 @@ namespace Portal.Authentication
 			this.httpClient = httpClient;
 			this.localStorage = localStorage;
 			this.apiHelper = apiHelper;
-			authTokenStorageKey = config[key:"authTokenStorageKey"];
+			authTokenStorageKey = config[key: "authTokenStorageKey"];
 			anonymous = new AuthenticationState(user: new ClaimsPrincipal(identity: new ClaimsIdentity()));
 		}
 
@@ -35,7 +35,7 @@ namespace Portal.Authentication
 		{
 			var token = await localStorage.GetItemAsync<string>(key: authTokenStorageKey);
 
-			if(string.IsNullOrWhiteSpace(token))
+			if (string.IsNullOrWhiteSpace(token))
 			{
 				return anonymous;
 			}
@@ -54,7 +54,7 @@ namespace Portal.Authentication
 				user: new ClaimsPrincipal(
 					identity: new ClaimsIdentity(
 						JwtParser.ParseClaimsFromJwt(token)
-						, authenticationType:"jwtAuthType"))); 
+						, authenticationType: "jwtAuthType")));
 		}
 
 		public async Task<bool> NotifyUserAuthenticationAsync(string token)

@@ -23,10 +23,9 @@ namespace TRMDesktopUI.Library.Api
 			InitializeClient();
 		}
 
-		public HttpClient ApiClient 
-		{ 
-			get
-			{
+		public HttpClient ApiClient
+		{
+			get {
 				return apiClient;
 			}
 		}

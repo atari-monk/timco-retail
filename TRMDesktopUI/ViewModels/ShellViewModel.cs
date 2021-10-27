@@ -7,7 +7,7 @@ using TRMDesktopUI.Library.Models;
 
 namespace TRMDesktopUI.ViewModels
 {
-	public class ShellViewModel : 
+	public class ShellViewModel :
 		Conductor<object>
 		, IHandle<LogOnEvent>
 	{
@@ -16,8 +16,7 @@ namespace TRMDesktopUI.ViewModels
 
 		public bool IsLoggedIn
 		{
-			get
-			{
+			get {
 				bool output = false;
 
 				if (string.IsNullOrWhiteSpace(user.Token) == false)
@@ -31,8 +30,7 @@ namespace TRMDesktopUI.ViewModels
 
 		public bool IsLoggedOut
 		{
-			get
-			{
+			get {
 				return !IsLoggedIn;
 			}
 		}

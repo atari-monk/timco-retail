@@ -54,10 +54,10 @@ namespace TRMApi.Controllers
 		[AllowAnonymous]
 		public async Task<IActionResult> Register(UserRegistrationModel user)
 		{
-			if(ModelState.IsValid)
+			if (ModelState.IsValid)
 			{
 				var existingUser = await userManager.FindByEmailAsync(user.EmailAddress);
-				if(existingUser is null)
+				if (existingUser is null)
 				{
 					IdentityUser newUser = new()
 					{
@@ -68,16 +68,16 @@ namespace TRMApi.Controllers
 
 					IdentityResult result = await userManager.CreateAsync(newUser, user.Password);
 
-					if(result.Succeeded)
+					if (result.Succeeded)
 					{
 						existingUser = await userManager.FindByEmailAsync(user.EmailAddress);
 
-						if(existingUser is null)
+						if (existingUser is null)
 						{
 							return BadRequest();
 						}
 
-						UserModel u = new() 
+						UserModel u = new()
 						{
 							Id = existingUser.Id
 							, FirstName = user.FirstName
@@ -86,8 +86,8 @@ namespace TRMApi.Controllers
 						};
 						userData.CreateUser(u);
 						return Ok();
-					}	
-				}	
+					}
+				}
 			}
 
 			return BadRequest();
@@ -102,8 +102,10 @@ namespace TRMApi.Controllers
 
 			var users = context.Users.ToList();
 			var userRoles = from ur in context.UserRoles
-							join r in context.Roles on ur.RoleId equals r.Id
-							select new { ur.UserId, ur.RoleId, r.Name };
+											join r in context.Roles on ur.RoleId equals r.Id
+											select new {
+												ur.UserId, ur.RoleId, r.Name
+											};
 
 			foreach (var user in users)
 			{
