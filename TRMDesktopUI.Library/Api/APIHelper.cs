@@ -32,7 +32,7 @@ namespace TRMDesktopUI.Library.Api
 
 		private void InitializeClient()
 		{
-			string api = config.GetValue<string>("api");
+			var api = config.GetValue<string>("api");
 
 			apiClient = new HttpClient
 			{
@@ -52,7 +52,7 @@ namespace TRMDesktopUI.Library.Api
 					, new KeyValuePair<string,string>("password", password)
 				});
 
-			using HttpResponseMessage response = await apiClient.PostAsync("/Token", data);
+			using var response = await apiClient.PostAsync("/Token", data);
 			if (response.IsSuccessStatusCode)
 			{
 				var result = await response.Content.ReadAsAsync<AuthenticatedUser>();
@@ -76,7 +76,7 @@ namespace TRMDesktopUI.Library.Api
 			apiClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 			apiClient.DefaultRequestHeaders.Add("Authorization", $"Bearer { token }");
 
-			using HttpResponseMessage response = await apiClient.GetAsync("/api/User");
+			using var response = await apiClient.GetAsync("/api/User");
 			if (response.IsSuccessStatusCode)
 			{
 				var result = await response.Content.ReadAsAsync<LoggedInUserModel>();

@@ -37,15 +37,13 @@ namespace TRMDataManager.Library.DataAccess
 		{
 			var connectionString = GetConnectionString(connectionStringName);
 
-			using (IDbConnection connection = new SqlConnection(connectionString))
-			{
-				List<T> rows = connection.Query<T>(
-					storedProcedure
-					, parameters
-					, commandType: CommandType.StoredProcedure).ToList();
+			using IDbConnection connection = new SqlConnection(connectionString);
+			var rows = connection.Query<T>(
+				storedProcedure
+				, parameters
+				, commandType: CommandType.StoredProcedure).ToList();
 
-				return rows;
-			}
+			return rows;
 		}
 
 		public void SaveData<T>(
@@ -55,13 +53,11 @@ namespace TRMDataManager.Library.DataAccess
 		{
 			var connectionString = GetConnectionString(connectionStringName);
 
-			using (IDbConnection connection = new SqlConnection(connectionString))
-			{
-				connection.Execute(
-					storedProcedure
-					, parameters
-					, commandType: CommandType.StoredProcedure);
-			}
+			using IDbConnection connection = new SqlConnection(connectionString);
+			connection.Execute(
+				storedProcedure
+				, parameters
+				, commandType: CommandType.StoredProcedure);
 		}
 
 		public void StartTransaction(string connectionStringName)
@@ -103,6 +99,7 @@ namespace TRMDataManager.Library.DataAccess
 
 			transaction = null;
 			connection = null;
+			GC.SuppressFinalize(this);
 		}
 
 		public void SaveDataInTransaction<T>(
@@ -120,7 +117,7 @@ namespace TRMDataManager.Library.DataAccess
 			string storedProcedure
 			, U parameters)
 		{
-			List<T> rows = connection.Query<T>(
+			var rows = connection.Query<T>(
 					storedProcedure
 					, parameters
 					, commandType: CommandType.StoredProcedure

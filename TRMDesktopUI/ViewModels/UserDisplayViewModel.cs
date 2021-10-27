@@ -145,7 +145,7 @@ namespace TRMDesktopUI.ViewModels
 			this.userEndpoint = userEndpoint;
 		}
 
-		protected override async void OnViewLoaded(object view)
+		protected async override void OnViewLoaded(object view)
 		{
 			base.OnViewLoaded(view);
 			try

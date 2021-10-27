@@ -7,6 +7,11 @@ namespace TRMApi.Models
 			get; set;
 		}
 
-		public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
+		public bool ShowRequestId
+		{
+			get {
+				return string.IsNullOrEmpty(RequestId) == false;
+			}
+		}
 	}
 }

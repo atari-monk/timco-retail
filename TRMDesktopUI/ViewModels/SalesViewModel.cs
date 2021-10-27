@@ -97,7 +97,7 @@ namespace TRMDesktopUI.ViewModels
 		{
 			decimal subTotal = 0;
 
-			foreach (CartItemDisplayModel item in Cart)
+			foreach (var item in Cart)
 			{
 				subTotal += item.Product.RetailPrice * item.QuantityInCart;
 			}
@@ -108,7 +108,7 @@ namespace TRMDesktopUI.ViewModels
 		private decimal CalculateTax()
 		{
 			decimal taxAmount = 0;
-			decimal taxRate = config.GetValue<decimal>("taxRate") / 100;
+			var taxRate = config.GetValue<decimal>("taxRate") / 100;
 
 			taxAmount = Cart
 				.Where(x => x.Product.IsTaxable)
@@ -127,7 +127,7 @@ namespace TRMDesktopUI.ViewModels
 		public string Total
 		{
 			get {
-				decimal total = CalculateSubTotal() + CalculateTax();
+				var total = CalculateSubTotal() + CalculateTax();
 				return total.ToString("C"); ;
 			}
 		}
@@ -135,7 +135,7 @@ namespace TRMDesktopUI.ViewModels
 		public bool CanAddToCart
 		{
 			get {
-				bool output = false;
+				var output = false;
 
 				if (ItemQuantity > 0 && SelectedProduct?.QuantityInStock >= ItemQuantity)
 				{
@@ -173,7 +173,7 @@ namespace TRMDesktopUI.ViewModels
 			NotifyOfPropertyChange(() => CanCheckOut);
 		}
 
-		protected override async void OnViewLoaded(object view)
+		protected async override void OnViewLoaded(object view)
 		{
 			base.OnViewLoaded(view);
 			try
@@ -242,7 +242,7 @@ namespace TRMDesktopUI.ViewModels
 		public bool CanRemoveFromCart
 		{
 			get {
-				bool output = false;
+				var output = false;
 
 				if (SelectedCartItem != null && SelectedCartItem?.QuantityInCart > 0)
 				{
@@ -276,7 +276,7 @@ namespace TRMDesktopUI.ViewModels
 		public bool CanCheckOut
 		{
 			get {
-				bool output = false;
+				var output = false;
 
 				if (Cart.Count > 0)
 				{

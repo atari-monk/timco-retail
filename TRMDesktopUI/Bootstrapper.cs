@@ -16,7 +16,7 @@ namespace TRMDesktopUI
 {
 	public class Bootstrapper : BootstrapperBase
 	{
-		private readonly SimpleContainer container = new SimpleContainer();
+		private readonly SimpleContainer container = new();
 
 		public Bootstrapper()
 		{
@@ -28,9 +28,9 @@ namespace TRMDesktopUI
 				"PasswordChanged");
 		}
 
-		private IConfiguration AddConfiguration()
+		private static IConfiguration AddConfiguration()
 		{
-			IConfigurationBuilder builder = new ConfigurationBuilder()
+			var builder = new ConfigurationBuilder()
 				.SetBasePath(Directory.GetCurrentDirectory())
 				.AddJsonFile("appsettings.json");
 
