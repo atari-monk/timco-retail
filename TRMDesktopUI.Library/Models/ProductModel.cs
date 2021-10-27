@@ -26,5 +26,9 @@
 		{
 			get; set;
 		}
+		public string ProductImage
+		{
+			get; set;
+		}
 	}
 }

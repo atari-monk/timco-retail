@@ -10,6 +10,7 @@ begin
 		, RetailPrice
 		, QuantityInStock
 		, IsTaxable
+		, ProductImage
 	from dbo.Product
 	order by ProductName;
 end
