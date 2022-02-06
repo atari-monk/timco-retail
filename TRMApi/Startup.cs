@@ -5,13 +5,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using TRMApi.Data;
-using Microsoft.OpenApi.Models;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
+using Microsoft.OpenApi.Models;
 using System;
+using System.Text;
+using TRMApi.Data;
 using TRMDataManager.Library.DataAccess;
-using TRMDataManager.Library.Internal.DataAccess;
 using TRMDataManager.Library.SqlDataAcces;
 
 namespace TRMApi
@@ -23,11 +22,22 @@ namespace TRMApi
 			Configuration = configuration;
 		}
 
-		public IConfiguration Configuration { get; }
+		public IConfiguration Configuration
+		{
+			get;
+		}
 
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
+			services.AddDatabaseDeveloperPageExceptionFilter();
+			services.AddCors(policy =>
+			{
+				policy.AddPolicy("OpenCorsPolicy", opt =>
+					opt.AllowAnyOrigin()
+					.AllowAnyHeader()
+					.AllowAnyMethod());
+			});
 			services.AddDbContext<ApplicationDbContext>(options =>
 				options.UseSqlServer(
 					Configuration.GetConnectionString("DefaultConnection")));
@@ -81,7 +91,7 @@ namespace TRMApi
 			if (env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();
-				app.UseDatabaseErrorPage();
+				app.UseMigrationsEndPoint();
 			}
 			else
 			{
@@ -90,6 +100,7 @@ namespace TRMApi
 				app.UseHsts();
 			}
 			app.UseHttpsRedirection();
+			app.UseCors("OpenCorsPolicy");
 			app.UseStaticFiles();
 
 			app.UseRouting();

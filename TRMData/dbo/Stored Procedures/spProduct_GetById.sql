@@ -11,6 +11,7 @@ begin
 		, RetailPrice
 		, QuantityInStock
 		, IsTaxable
+		, ProductImage
 	from dbo.Product
 	where Id = @Id;
 end

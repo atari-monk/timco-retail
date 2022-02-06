@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using TRMDataManager.Library.Internal.DataAccess;
+using TRMDataManager.Library.DataAccess;
 using TRMDataManager.Library.Models;
 
 namespace TRMDataManager.Library.SqlDataAcces

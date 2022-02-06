@@ -10,7 +10,7 @@ namespace TRMDesktopUI.ViewModels
 	public class LoginViewModel : Screen
 	{
 		private string userName = "kmazanek@gmail.com";
-		private string password = "Pwd12345.";
+		private string password;
 		private string errorMessage;
 		private readonly IAPIHelper apiHelper;
 		private readonly IEventAggregator events;
@@ -25,10 +25,11 @@ namespace TRMDesktopUI.ViewModels
 
 		public string UserName
 		{
-			get { return userName; }
-			
-			set
-			{
+			get {
+				return userName;
+			}
+
+			set {
 				userName = value;
 				NotifyOfPropertyChange(() => UserName);
 				NotifyOfPropertyChange(() => CanLogIn);
@@ -37,10 +38,11 @@ namespace TRMDesktopUI.ViewModels
 
 		public string Password
 		{
-			get { return password; }
+			get {
+				return password;
+			}
 
-			set
-			{
+			set {
 				password = value;
 				NotifyOfPropertyChange(() => Password);
 				NotifyOfPropertyChange(() => CanLogIn);
@@ -49,11 +51,10 @@ namespace TRMDesktopUI.ViewModels
 
 		public bool IsErrorVisible
 		{
-			get 
-			{
+			get {
 				bool output = false;
 
-				if (ErrorMessage?.Length > 0 )
+				if (ErrorMessage?.Length > 0)
 				{
 					output = true;
 				}
@@ -64,9 +65,10 @@ namespace TRMDesktopUI.ViewModels
 
 		public string ErrorMessage
 		{
-			get { return errorMessage; }
-			set 
-			{ 
+			get {
+				return errorMessage;
+			}
+			set {
 				errorMessage = value;
 				NotifyOfPropertyChange(() => ErrorMessage);
 				NotifyOfPropertyChange(() => IsErrorVisible);
@@ -75,8 +77,7 @@ namespace TRMDesktopUI.ViewModels
 
 		public bool CanLogIn
 		{
-			get
-			{
+			get {
 				bool output = false;
 
 				if (UserName?.Length > 0 && Password?.Length > 0)

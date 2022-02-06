@@ -17,33 +17,45 @@ namespace TRMDesktopUI.Library.Api
 
 		public async Task<List<UserModel>> GetAll()
 		{
-			using (var response = await apiHelper.ApiClient.GetAsync("/api/User/Admin/GetAllUsers"))
+			using var response = await apiHelper.ApiClient.GetAsync("/api/User/Admin/GetAllUsers");
+			if (response.IsSuccessStatusCode)
 			{
-				if (response.IsSuccessStatusCode)
-				{
-					var result = await response.Content.ReadAsAsync<List<UserModel>>();
-					return result;
-				}
-				else
-				{
-					throw new Exception(response.ReasonPhrase);
-				}
+				var result = await response.Content.ReadAsAsync<List<UserModel>>();
+				return result;
+			}
+			else
+			{
+				throw new Exception(response.ReasonPhrase);
 			}
 		}
 
-		public async Task<Dictionary<string,string>> GetAllRoles()
+		public async Task CreateUser(CreateUserModel model)
 		{
-			using (var response = await apiHelper.ApiClient.GetAsync("/api/User/Admin/GetAllRoles"))
+			var data = new {
+				model.FirstName
+				, model.LastName
+				, model.EmailAddress
+				, model.Password
+			};
+
+			using var response = await apiHelper.ApiClient.PostAsJsonAsync("/api/User/Register", data);
+			if (response.IsSuccessStatusCode == false)
 			{
-				if (response.IsSuccessStatusCode)
-				{
-					var result = await response.Content.ReadAsAsync<Dictionary<string,string>>();
-					return result;
-				}
-				else
-				{
-					throw new Exception(response.ReasonPhrase);
-				}
+				throw new Exception(response.ReasonPhrase);
+			}
+		}
+
+		public async Task<Dictionary<string, string>> GetAllRoles()
+		{
+			using var response = await apiHelper.ApiClient.GetAsync("/api/User/Admin/GetAllRoles");
+			if (response.IsSuccessStatusCode)
+			{
+				var result = await response.Content.ReadAsAsync<Dictionary<string, string>>();
+				return result;
+			}
+			else
+			{
+				throw new Exception(response.ReasonPhrase);
 			}
 		}
 
@@ -51,12 +63,10 @@ namespace TRMDesktopUI.Library.Api
 		{
 			var data = new { userId, roleName };
 
-			using (var response = await apiHelper.ApiClient.PostAsJsonAsync("/api/User/Admin/AddRole", data))
+			using var response = await apiHelper.ApiClient.PostAsJsonAsync("/api/User/Admin/AddRole", data);
+			if (response.IsSuccessStatusCode == false)
 			{
-				if (response.IsSuccessStatusCode == false)
-				{
-					throw new Exception(response.ReasonPhrase);
-				}
+				throw new Exception(response.ReasonPhrase);
 			}
 		}
 
@@ -64,12 +74,10 @@ namespace TRMDesktopUI.Library.Api
 		{
 			var data = new { userId, roleName };
 
-			using (var response = await apiHelper.ApiClient.PostAsJsonAsync("/api/User/Admin/RemoveRole", data))
+			using var response = await apiHelper.ApiClient.PostAsJsonAsync("/api/User/Admin/RemoveRole", data);
+			if (response.IsSuccessStatusCode == false)
 			{
-				if (response.IsSuccessStatusCode == false)
-				{
-					throw new Exception(response.ReasonPhrase);
-				}
+				throw new Exception(response.ReasonPhrase);
 			}
 		}
 	}

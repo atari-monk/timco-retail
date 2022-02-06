@@ -7,18 +7,16 @@ using TRMDesktopUI.Library.Models;
 
 namespace TRMDesktopUI.ViewModels
 {
-	public class ShellViewModel : 
+	public class ShellViewModel :
 		Conductor<object>
 		, IHandle<LogOnEvent>
 	{
-		private readonly IEventAggregator events;
 		private readonly ILoggedInUserModel user;
 		private readonly IAPIHelper helper;
 
 		public bool IsLoggedIn
 		{
-			get
-			{
+			get {
 				bool output = false;
 
 				if (string.IsNullOrWhiteSpace(user.Token) == false)
@@ -30,12 +28,18 @@ namespace TRMDesktopUI.ViewModels
 			}
 		}
 
+		public bool IsLoggedOut
+		{
+			get {
+				return !IsLoggedIn;
+			}
+		}
+
 		public ShellViewModel(
 			IEventAggregator events
 			, ILoggedInUserModel user
 			, IAPIHelper helper)
 		{
-			this.events = events;
 			this.user = user;
 			this.helper = helper;
 
@@ -56,6 +60,12 @@ namespace TRMDesktopUI.ViewModels
 				, new CancellationToken());
 		}
 
+		public async Task LogIn()
+		{
+			await ActivateItemAsync(IoC.Get<LoginViewModel>()
+				, new CancellationToken());
+		}
+
 		public async Task LogOut()
 		{
 			user.ResetUserModel();
@@ -63,12 +73,14 @@ namespace TRMDesktopUI.ViewModels
 			await ActivateItemAsync(IoC.Get<LoginViewModel>()
 				, new CancellationToken());
 			NotifyOfPropertyChange(() => IsLoggedIn);
+			NotifyOfPropertyChange(() => IsLoggedOut);
 		}
 
 		public async Task HandleAsync(LogOnEvent message, CancellationToken cancellationToken)
 		{
 			await ActivateItemAsync(IoC.Get<SalesViewModel>(), cancellationToken);
 			NotifyOfPropertyChange(() => IsLoggedIn);
+			NotifyOfPropertyChange(() => IsLoggedOut);
 		}
 	}
 }

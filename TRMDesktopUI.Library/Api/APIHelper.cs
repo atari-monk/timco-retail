@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using System.Configuration;
 using TRMDesktopUI.Library.Models;
 
 namespace TRMDesktopUI.Library.Api
@@ -12,24 +12,27 @@ namespace TRMDesktopUI.Library.Api
 	{
 		private HttpClient apiClient;
 		private readonly ILoggedInUserModel loggedInUser;
+		private readonly IConfiguration config;
 
-		public APIHelper(ILoggedInUserModel loggedInUser)
+		public APIHelper(
+			ILoggedInUserModel loggedInUser
+			, IConfiguration config)
 		{
 			this.loggedInUser = loggedInUser;
+			this.config = config;
 			InitializeClient();
 		}
 
-		public HttpClient ApiClient 
-		{ 
-			get
-			{
+		public HttpClient ApiClient
+		{
+			get {
 				return apiClient;
 			}
 		}
 
 		private void InitializeClient()
 		{
-			string api = ConfigurationManager.AppSettings["api"];
+			var api = config.GetValue<string>("api");
 
 			apiClient = new HttpClient
 			{
@@ -49,17 +52,15 @@ namespace TRMDesktopUI.Library.Api
 					, new KeyValuePair<string,string>("password", password)
 				});
 
-			using (HttpResponseMessage response = await apiClient.PostAsync("/Token", data))
+			using var response = await apiClient.PostAsync("/Token", data);
+			if (response.IsSuccessStatusCode)
 			{
-				if (response.IsSuccessStatusCode)
-				{
-					var result = await response.Content.ReadAsAsync<AuthenticatedUser>();
-					return result;
-				}
-				else
-				{
-					throw new Exception(response.ReasonPhrase);
-				}
+				var result = await response.Content.ReadAsAsync<AuthenticatedUser>();
+				return result;
+			}
+			else
+			{
+				throw new Exception(response.ReasonPhrase);
 			}
 		}
 
@@ -75,22 +76,20 @@ namespace TRMDesktopUI.Library.Api
 			apiClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 			apiClient.DefaultRequestHeaders.Add("Authorization", $"Bearer { token }");
 
-			using (HttpResponseMessage response = await apiClient.GetAsync("/api/User"))
+			using var response = await apiClient.GetAsync("/api/User");
+			if (response.IsSuccessStatusCode)
 			{
-				if (response.IsSuccessStatusCode)
-				{
-					var result = await response.Content.ReadAsAsync<LoggedInUserModel>();
-					loggedInUser.CreatedDate = result.CreatedDate;
-					loggedInUser.EmailAddress = result.EmailAddress;
-					loggedInUser.FirstName = result.FirstName;
-					loggedInUser.LastName = result.LastName;
-					loggedInUser.Id = result.Id;
-					loggedInUser.Token = token;
-				}
-				else
-				{
-					throw new Exception(response.ReasonPhrase);
-				}
+				var result = await response.Content.ReadAsAsync<LoggedInUserModel>();
+				loggedInUser.CreatedDate = result.CreatedDate;
+				loggedInUser.EmailAddress = result.EmailAddress;
+				loggedInUser.FirstName = result.FirstName;
+				loggedInUser.LastName = result.LastName;
+				loggedInUser.Id = result.Id;
+				loggedInUser.Token = token;
+			}
+			else
+			{
+				throw new Exception(response.ReasonPhrase);
 			}
 		}
 	}

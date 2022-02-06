@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Caliburn.Micro;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -8,7 +9,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using TRMDesktopUI.Library.Api;
-using TRMDesktopUI.Library.Helpers;
 using TRMDesktopUI.Library.Models;
 using TRMDesktopUI.Models;
 
@@ -18,21 +18,22 @@ namespace TRMDesktopUI.ViewModels
 	{
 		private readonly IProductEndpoint productEndpoint;
 		private readonly ISaleEndpoint saleEndpoint;
-		private readonly IConfigHelper configHelper;
+		private readonly IConfiguration config;
 		private readonly IMapper mapper;
 		private readonly StatusInfoViewModel status;
 		private readonly IWindowManager windowManager;
 		private BindingList<ProductDisplayModel> products;
 		private ProductDisplayModel selectedProduct;
 		private CartItemDisplayModel selectedCartItem;
-		private BindingList<CartItemDisplayModel> cart = new BindingList<CartItemDisplayModel>();
+		private BindingList<CartItemDisplayModel> cart = new();
 		private int itemQuantity = 1;
 
 		public BindingList<ProductDisplayModel> Products
 		{
-			get { return products; }
-			set
-			{
+			get {
+				return products;
+			}
+			set {
 				products = value;
 				NotifyOfPropertyChange(() => Products);
 			}
@@ -40,9 +41,10 @@ namespace TRMDesktopUI.ViewModels
 
 		public ProductDisplayModel SelectedProduct
 		{
-			get { return selectedProduct; }
-			set
-			{
+			get {
+				return selectedProduct;
+			}
+			set {
 				selectedProduct = value;
 				NotifyOfPropertyChange(() => SelectedProduct);
 				NotifyOfPropertyChange(() => CanAddToCart);
@@ -51,9 +53,10 @@ namespace TRMDesktopUI.ViewModels
 
 		public CartItemDisplayModel SelectedCartItem
 		{
-			get { return selectedCartItem; }
-			set
-			{
+			get {
+				return selectedCartItem;
+			}
+			set {
 				selectedCartItem = value;
 				NotifyOfPropertyChange(() => selectedCartItem);
 				NotifyOfPropertyChange(() => CanRemoveFromCart);
@@ -62,9 +65,10 @@ namespace TRMDesktopUI.ViewModels
 
 		public BindingList<CartItemDisplayModel> Cart
 		{
-			get { return cart; }
-			set
-			{
+			get {
+				return cart;
+			}
+			set {
 				cart = value;
 				NotifyOfPropertyChange(() => Cart);
 			}
@@ -72,9 +76,10 @@ namespace TRMDesktopUI.ViewModels
 
 		public int ItemQuantity
 		{
-			get { return itemQuantity; }
-			set
-			{
+			get {
+				return itemQuantity;
+			}
+			set {
 				itemQuantity = value;
 				NotifyOfPropertyChange(() => ItemQuantity);
 				NotifyOfPropertyChange(() => CanAddToCart);
@@ -83,8 +88,7 @@ namespace TRMDesktopUI.ViewModels
 
 		public string SubTotal
 		{
-			get
-			{
+			get {
 				return CalculateSubTotal().ToString("C");
 			}
 		}
@@ -93,7 +97,7 @@ namespace TRMDesktopUI.ViewModels
 		{
 			decimal subTotal = 0;
 
-			foreach (CartItemDisplayModel item in Cart)
+			foreach (var item in Cart)
 			{
 				subTotal += item.Product.RetailPrice * item.QuantityInCart;
 			}
@@ -104,7 +108,7 @@ namespace TRMDesktopUI.ViewModels
 		private decimal CalculateTax()
 		{
 			decimal taxAmount = 0;
-			decimal taxRate = configHelper.GetTaxRate() / 100;
+			var taxRate = config.GetValue<decimal>("taxRate") / 100;
 
 			taxAmount = Cart
 				.Where(x => x.Product.IsTaxable)
@@ -115,26 +119,23 @@ namespace TRMDesktopUI.ViewModels
 
 		public string Tax
 		{
-			get
-			{
+			get {
 				return CalculateTax().ToString("C");
 			}
 		}
 
 		public string Total
 		{
-			get
-			{
-				decimal total = CalculateSubTotal() + CalculateTax();
+			get {
+				var total = CalculateSubTotal() + CalculateTax();
 				return total.ToString("C"); ;
 			}
 		}
 
 		public bool CanAddToCart
 		{
-			get
-			{
-				bool output = false;
+			get {
+				var output = false;
 
 				if (ItemQuantity > 0 && SelectedProduct?.QuantityInStock >= ItemQuantity)
 				{
@@ -148,14 +149,14 @@ namespace TRMDesktopUI.ViewModels
 		public SalesViewModel(
 			IProductEndpoint productEndpoint
 			, ISaleEndpoint saleEndpoint
-			, IConfigHelper configHelper
+			, IConfiguration config
 			, IMapper mapper
 			, StatusInfoViewModel status
 			, IWindowManager windowManager)
 		{
 			this.productEndpoint = productEndpoint;
 			this.saleEndpoint = saleEndpoint;
-			this.configHelper = configHelper;
+			this.config = config;
 			this.mapper = mapper;
 			this.status = status;
 			this.windowManager = windowManager;
@@ -172,7 +173,7 @@ namespace TRMDesktopUI.ViewModels
 			NotifyOfPropertyChange(() => CanCheckOut);
 		}
 
-		protected override async void OnViewLoaded(object view)
+		protected async override void OnViewLoaded(object view)
 		{
 			base.OnViewLoaded(view);
 			try
@@ -191,7 +192,7 @@ namespace TRMDesktopUI.ViewModels
 					status.UpdateMessage(
 						"Unauthorized Access"
 						, "You dont have permission to interact with the Sales Form.");
-					await windowManager.ShowDialogAsync(status, null, settings); 
+					await windowManager.ShowDialogAsync(status, null, settings);
 				}
 				else
 				{
@@ -201,7 +202,7 @@ namespace TRMDesktopUI.ViewModels
 					await windowManager.ShowDialogAsync(status, null, settings);
 				}
 
-				TryCloseAsync();
+				await TryCloseAsync();
 			}
 		}
 
@@ -240,9 +241,8 @@ namespace TRMDesktopUI.ViewModels
 
 		public bool CanRemoveFromCart
 		{
-			get
-			{
-				bool output = false;
+			get {
+				var output = false;
 
 				if (SelectedCartItem != null && SelectedCartItem?.QuantityInCart > 0)
 				{
@@ -275,9 +275,8 @@ namespace TRMDesktopUI.ViewModels
 
 		public bool CanCheckOut
 		{
-			get
-			{
-				bool output = false;
+			get {
+				var output = false;
 
 				if (Cart.Count > 0)
 				{

@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using TRMApi.Models;
@@ -9,16 +8,13 @@ namespace TRMApi.Controllers
 {
 	public class HomeController : Controller
 	{
-		private readonly ILogger<HomeController> _logger;
 		private readonly RoleManager<IdentityRole> roleManager;
 		private readonly UserManager<IdentityUser> userManager;
 
 		public HomeController(
-			ILogger<HomeController> logger
-			, RoleManager<IdentityRole> roleManager
+			RoleManager<IdentityRole> roleManager
 			, UserManager<IdentityUser> userManager)
 		{
-			_logger = logger;
 			this.roleManager = roleManager;
 			this.userManager = userManager;
 		}
@@ -30,25 +26,27 @@ namespace TRMApi.Controllers
 
 		public async Task<IActionResult> Privacy()
 		{
-			//string[] roles = { "Admin", "Manager", "Cashier" };
+			string[] roles = { "Admin", "Manager", "Cashier" };
 
-			//foreach (var role in roles)
-			//{
-			//	var roleExist = await roleManager.RoleExistsAsync(role);
+			foreach (var role in roles)
+			{
+				var roleExist = await roleManager.RoleExistsAsync(role);
 
-			//	if(roleExist == false)
-			//	{
-			//		await roleManager.CreateAsync(new IdentityRole(role));
-			//	}
-			//}
+				if (roleExist == false)
+				{
+					await roleManager.CreateAsync(new IdentityRole(role));
+				}
+			}
 
-			//var user = await userManager.FindByEmailAsync("kmazanek@gmail.com");
+			var user = await userManager.FindByEmailAsync("kmazanek@gmail.com");
 
-			//if(user != null)
-			//{
-			//	await userManager.AddToRoleAsync(user, "Admin");
-			//	await userManager.AddToRoleAsync(user, "Cashier");
-			//}
+			if (user != null)
+			{
+				await userManager.AddToRoleAsync(user, "Admin");
+				await userManager.AddToRoleAsync(user, "Cashier");
+			}
+
+			await Task.Run(() => { });
 
 			return View();
 		}

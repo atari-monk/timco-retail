@@ -21,8 +21,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TRMApi", "TRMApi\TRMApi.csp
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D870A9EB-4436-4DAB-94FF-506410B177A8}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 		Roadmap.txt = Roadmap.txt
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebApps", "WebApps", "{5A1C4EDE-2477-42FF-AD8F-5EFC0A39A6CB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Portal", "Portal\Portal.csproj", "{5EF48276-E7EA-40DD-B984-1E5C07E32A9C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -52,6 +57,10 @@ Global
 		{0652B79F-2793-438E-AD81-D20654E10B1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0652B79F-2793-438E-AD81-D20654E10B1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0652B79F-2793-438E-AD81-D20654E10B1E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5EF48276-E7EA-40DD-B984-1E5C07E32A9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EF48276-E7EA-40DD-B984-1E5C07E32A9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EF48276-E7EA-40DD-B984-1E5C07E32A9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EF48276-E7EA-40DD-B984-1E5C07E32A9C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -62,6 +71,7 @@ Global
 		{C32AEC20-C676-4C07-A483-704150F7DB57} = {BD79752B-B0ED-400B-BC82-1F4A820441F3}
 		{38C70002-87F1-497B-A0CC-438FD214F83F} = {FD814B89-CF95-4E62-B271-9E4BD5431065}
 		{0652B79F-2793-438E-AD81-D20654E10B1E} = {BD79752B-B0ED-400B-BC82-1F4A820441F3}
+		{5EF48276-E7EA-40DD-B984-1E5C07E32A9C} = {5A1C4EDE-2477-42FF-AD8F-5EFC0A39A6CB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2CF8EC98-4A12-4F06-80F8-018F4AE99F6E}

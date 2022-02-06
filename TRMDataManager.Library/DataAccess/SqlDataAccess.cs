@@ -1,13 +1,13 @@
 ﻿using Dapper;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 
-namespace TRMDataManager.Library.Internal.DataAccess
+namespace TRMDataManager.Library.DataAccess
 {
 	public class SqlDataAccess : IDisposable, ISqlDataAccess
 	{
@@ -37,15 +37,13 @@ namespace TRMDataManager.Library.Internal.DataAccess
 		{
 			var connectionString = GetConnectionString(connectionStringName);
 
-			using (IDbConnection connection = new SqlConnection(connectionString))
-			{
-				List<T> rows = connection.Query<T>(
-					storedProcedure
-					, parameters
-					, commandType: CommandType.StoredProcedure).ToList();
+			using IDbConnection connection = new SqlConnection(connectionString);
+			var rows = connection.Query<T>(
+				storedProcedure
+				, parameters
+				, commandType: CommandType.StoredProcedure).ToList();
 
-				return rows;
-			}
+			return rows;
 		}
 
 		public void SaveData<T>(
@@ -55,13 +53,11 @@ namespace TRMDataManager.Library.Internal.DataAccess
 		{
 			var connectionString = GetConnectionString(connectionStringName);
 
-			using (IDbConnection connection = new SqlConnection(connectionString))
-			{
-				connection.Execute(
-					storedProcedure
-					, parameters
-					, commandType: CommandType.StoredProcedure);
-			}
+			using IDbConnection connection = new SqlConnection(connectionString);
+			connection.Execute(
+				storedProcedure
+				, parameters
+				, commandType: CommandType.StoredProcedure);
 		}
 
 		public void StartTransaction(string connectionStringName)
@@ -95,7 +91,7 @@ namespace TRMDataManager.Library.Internal.DataAccess
 				{
 					CommitTransaction();
 				}
-				catch(Exception ex)
+				catch (Exception ex)
 				{
 					logger.LogError(ex, "Commit transaction failed in the dispose method.");
 				}
@@ -103,6 +99,7 @@ namespace TRMDataManager.Library.Internal.DataAccess
 
 			transaction = null;
 			connection = null;
+			GC.SuppressFinalize(this);
 		}
 
 		public void SaveDataInTransaction<T>(
@@ -120,7 +117,7 @@ namespace TRMDataManager.Library.Internal.DataAccess
 			string storedProcedure
 			, U parameters)
 		{
-			List<T> rows = connection.Query<T>(
+			var rows = connection.Query<T>(
 					storedProcedure
 					, parameters
 					, commandType: CommandType.StoredProcedure

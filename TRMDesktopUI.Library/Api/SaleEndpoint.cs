@@ -17,15 +17,13 @@ namespace TRMDesktopUI.Library.Api
 
 		public async Task PostSale(SaleModel sale)
 		{
-			using (HttpResponseMessage response = await apiHelper.ApiClient.PostAsJsonAsync("/api/Sale", sale))
+			using HttpResponseMessage response = await apiHelper.ApiClient.PostAsJsonAsync("/api/Sale", sale);
+			if (response.IsSuccessStatusCode)
 			{
-				if (response.IsSuccessStatusCode)
-				{
-				}
-				else
-				{
-					throw new Exception(response.ReasonPhrase);
-				}
+			}
+			else
+			{
+				throw new Exception(response.ReasonPhrase);
 			}
 		}
 	}
