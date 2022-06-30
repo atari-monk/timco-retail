@@ -1,0 +1,16 @@
+add line
+<Sdk Name="Microsoft.Build.Sql" Version="0.1.3-preview" />
+
+so 
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <Sdk Name="Microsoft.Build.Sql" Version="0.1.3-preview" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+
+To avoid build errors, remove any default <Import> statements from the project 
+file that reference Microsoft.Data.Tools.Schema.SqlTasks.targets or Microsoft.Common.props.
+
+In order to build the project with dotnet use:
+
+>dotnet build /p:NetCoreBuild=true
